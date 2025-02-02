@@ -18,15 +18,14 @@ public class GameLogic {
         }
     }
 
-    public boolean checkGuessCorrectness(int guess, int bound) {
-        int secretNumber = generateRandomNumber(bound);
+    public boolean checkGuessCorrectness(int guess) {
+        int secretNumber = generateRandomNumber(100);
         secretNumber = adjustNumber(secretNumber);
         secretNumber = transformNumber(secretNumber);
 
         return guess == secretNumber;
     }
 
-    @Override
     public boolean checkGuessCorrectness(int guess, int testNumber) {
         testNumber = adjustNumber(testNumber);
         testNumber = transformNumber(testNumber);

@@ -1,6 +1,7 @@
 package server;
 
 import org.junit.jupiter.api.Test;
+import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.Scanner;
 
@@ -20,6 +21,10 @@ class GameLogicTest {
     void testValidateGuessCorrectness() {
         System.out.println("Guess a number: ");
         String guess = myObj.nextLine();
-        assertgameLogic.checkGuessCorrectness(15, 100);
+        assertEquals(false, (gameLogic.checkGuessCorrectness(15, 100)));
+    }
+
+    void testGeneratePrefic() {
+        assertEquals(false, (gameLogic.generatePrefix(10)));
     }
 }
