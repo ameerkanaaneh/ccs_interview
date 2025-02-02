@@ -26,4 +26,8 @@ public class GameClient {
             e.printStackTrace();
         }
     }
+
+    public Socket getClientSocket() {
+        return clientSocket;
+    }
 }

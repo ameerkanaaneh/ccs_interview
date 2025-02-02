@@ -1,40 +1,46 @@
 package server;
 
-import server.GameLogic;
 import java.io.*;
 import java.net.*;
 
-class ClientHandler extends Thread {
+public class ClientHandler extends Thread {
     private final Socket clientSocket;
-    private final GameLogic gameLogic;
-    private PrintWriter out;
+    private final String playerName;
 
-    public ClientHandler(Socket socket) {
+    public ClientHandler(Socket socket, String playerName) {
         this.clientSocket = socket;
-        this.gameLogic = new GameLogic();
+        this.playerName = playerName;
     }
 
+    public Socket getClientSocket() {
+        return clientSocket;
+    }
+
+    @Override
     public void run() {
         try (BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
              PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)) {
 
-            out.println("Welcome to the Guessing Game! Enter a number between 1 and 100.");
+            out.println("Welcome to the Guessing Game, " + playerName + "!");
+            out.println("Guess a number between 1 and 100.");
+            
             String inputLine;
-
             while ((inputLine = in.readLine()) != null) {
                 try {
-                    int guess = gameLogic.validateGuess(inputLine);
-                    boolean isCorrect = gameLogic.checkGuessCorrectness(guess);
-                    String prefix = gameLogic.generatePrefix(guess);
+                    int guess = Integer.parseInt(inputLine);
+                    boolean isCorrect = GameServer.checkGuess(guess, playerName);
 
                     if (isCorrect) {
-                        out.println(prefix + " Congratulations! You guessed correctly!");
-                        break;
+                        out.println("Congratulations! You guessed the correct number!");
                     } else {
-                        out.println(prefix + " Try again!");
+                        out.println("Try again!");
                     }
-                } catch (IllegalArgumentException e) {
-                    out.println(e.getMessage());
+
+                    // Update and broadcast game state to all clients
+                    GameServer.updateGameState();
+                    
+                } catch (NumberFormatException e) {
+                    out.println("Invalid input. Please enter a valid number.");
                 }
             }
         } catch (IOException e) {
@@ -46,9 +52,5 @@ class ClientHandler extends Thread {
                 e.printStackTrace();
             }
         }
-    }
-
-    public void sendMessage(String message) {
-        out.println(message);
     }
 }
