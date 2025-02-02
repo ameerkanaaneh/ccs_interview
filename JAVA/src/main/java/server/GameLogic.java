@@ -75,7 +75,7 @@ public class GameLogic {
         return number;
     }
 
-    public void generatePrefix(int guess) {
+    public String generatePrefix(int guess) {
         int formatChoice = random.nextInt(3);
         String prefix;
 
@@ -106,7 +106,7 @@ public class GameLogic {
             prefix += " Your guess is in the high-risk zone!";
         }
 
-        System.out.println(prefix);  // Prints the prefix instead of returning it
+        return prefix;
     }
 }
 
